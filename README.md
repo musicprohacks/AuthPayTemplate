@@ -23,8 +23,14 @@ included here.
 ```bash
 npm install
 cp .env.example .env.local   # then fill in the values
-npm run dev                  # http://localhost:3000
+npm run dev                  # http://localhost:3020
 ```
+
+The dev server is pinned to port 3020 (`next dev -p 3020` in `package.json`) so it
+doesn't silently land on a different port — Better Auth rejects requests whose
+origin doesn't match `BETTER_AUTH_URL`, so a drifting port shows up as an
+"Invalid origin" error. If 3020 is taken, free it or change the port in both
+`package.json`'s `dev` script and `BETTER_AUTH_URL`.
 
 Tables are created on server start (`src/instrumentation.ts`). The first time you
 start with an empty database, Better Auth logs a "Database schema mismatch" error.
@@ -37,7 +43,7 @@ work without any credentials, so the whole sign-in flow is testable out of the b
 ### Google
 
 1. [Google Cloud Console](https://console.cloud.google.com/apis/credentials) → **Create credentials → OAuth client ID → Web application**.
-2. Authorized redirect URI: `http://localhost:3000/api/auth/callback/google` (plus your production URL).
+2. Authorized redirect URI: `http://localhost:3020/api/auth/callback/google` (plus your production URL).
 3. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
 ### Email (Resend)

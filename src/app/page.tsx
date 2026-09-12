@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { CreditsPanel } from "@/components/credits-panel";
+import { OAuthErrorBanner } from "@/components/oauth-error-banner";
 import { SiteHeader } from "@/components/site-header";
 import { auth, enabledProviders } from "@/lib/auth";
 
@@ -17,6 +18,7 @@ export default async function Home() {
         providers={enabledProviders}
       />
       <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 pb-20 text-center">
+        <OAuthErrorBanner />
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           Hello{session ? `, ${session.user.name || session.user.email}` : " world"}
           {" "}
@@ -27,7 +29,7 @@ export default async function Home() {
         <p className="max-w-md text-lg text-zinc-400">
           {session
             ? "You're signed in. This is a minimal template — build on top of it."
-            : "A minimal auth starter template. Sign in with Google or an email link to get started."}
+            : "A minimal auth starter template. Sign in with Google, Facebook, or an email link to get started."}
         </p>
         {session && <CreditsPanel />}
       </main>

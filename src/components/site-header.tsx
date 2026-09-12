@@ -75,7 +75,7 @@ export function SiteHeader({
             onClose={() => setSignInOpen(false)}
             providers={providers}
             title="Sign in"
-            description="Use Google, or a sign-in link sent to your email."
+            description="Use Google, Facebook, or a sign-in link sent to your email."
           />
         </>
       )}

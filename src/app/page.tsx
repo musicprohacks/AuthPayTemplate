@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { CreditsPanel } from "@/components/credits-panel";
 import { SiteHeader } from "@/components/site-header";
 import { auth, enabledProviders } from "@/lib/auth";
 
@@ -28,6 +29,7 @@ export default async function Home() {
             ? "You're signed in. This is a minimal template — build on top of it."
             : "A minimal auth starter template. Sign in with Google or an email link to get started."}
         </p>
+        {session && <CreditsPanel />}
       </main>
     </>
   );

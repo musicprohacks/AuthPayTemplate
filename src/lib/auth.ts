@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins";
+import { ensureUserCredits } from "./credits";
 import { db } from "./db";
 import { sendMagicLinkEmail } from "./email";
 
@@ -33,9 +34,24 @@ export const auth = betterAuth({
       trustedProviders: ["google"],
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          ensureUserCredits(user.id);
+        },
+      },
+    },
+  },
   plugins: [
     magicLink({
-      sendMagicLink: async ({ email, url }) => {
+      sendMagicLink: async ({ email, url, metadata }) => {
+        // Dev bypass (see /api/dev/bypass-signin) skips the real send so it
+        // doesn't burn Resend quota — never set in production.
+        if (metadata?.devBypass) {
+          console.log(`[dev-bypass] magic link for ${email}: ${url}`);
+          return;
+        }
         await sendMagicLinkEmail({ to: email, url });
       },
     }),

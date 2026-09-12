@@ -4,7 +4,7 @@ A minimal, reusable web app template: authentication, sessions, and a
 Stripe test-mode credits system. Meant as a clean foundation for future
 apps.
 
-- **Sign in** with **Google**, **Facebook**, or a **passwordless email link** (sent via Resend)
+- **Sign in** with **Google**, or a **passwordless email link** (sent via Resend)
 - **Sessions** and a minimal user model, backed by SQLite
 - **Credits**: free credits on sign-up, one-time purchase, or weekly/monthly/yearly
   subscriptions (Stripe test mode — see the Stripe section below)
@@ -14,7 +14,7 @@ apps.
 | Concern | Choice |
 | --- | --- |
 | Framework | Next.js 16 (App Router, TypeScript, Tailwind CSS 4) |
-| Auth | [Better Auth](https://www.better-auth.com) — Google + Facebook social sign-in, magic-link email sign-in |
+| Auth | [Better Auth](https://www.better-auth.com) — Google social sign-in, magic-link email sign-in |
 | Email | [Resend](https://resend.com) |
 | Payments | [Stripe](https://stripe.com) (test mode) |
 | Database | SQLite via `better-sqlite3` (`./data/app.db`) |
@@ -38,9 +38,9 @@ Tables are created on server start (`src/instrumentation.ts`). The first time yo
 start with an empty database, Better Auth logs a "Database schema mismatch" error.
 This happens once, before migrations finish, and you can ignore it.
 
-Before credentials are set, the Google/Facebook buttons are disabled (a dev note
+Before credentials are set, the Google button is disabled (a dev note
 explains why), and the email link is logged to the server console instead of
-being emailed. All three work without any credentials, so the whole sign-in
+being emailed. Both work without any credentials, so the whole sign-in
 flow is testable out of the box — see `test.py` for a one-command way to spin
 up dev + Stripe webhook forwarding together.
 
@@ -49,17 +49,6 @@ up dev + Stripe webhook forwarding together.
 1. [Google Cloud Console](https://console.cloud.google.com/apis/credentials) → **Create credentials → OAuth client ID → Web application**.
 2. Authorized redirect URI: `http://localhost:3020/api/auth/callback/google` (plus your production URL).
 3. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
-
-### Facebook
-
-1. [Meta for Developers](https://developers.facebook.com/apps) → create an app → add the **Facebook Login** product.
-2. Valid OAuth Redirect URI: `http://localhost:3020/api/auth/callback/facebook` (plus your production URL).
-3. Set `FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET`.
-
-Facebook can omit the email from the profile even when the `email` permission
-is granted. When that happens, Better Auth redirects back with
-`?error=EMAIL_NOT_FOUND` instead of creating an account — `OAuthErrorBanner`
-catches this and shows a message pointing the user at Google or email sign-in.
 
 ### Email (Resend)
 
@@ -114,11 +103,10 @@ src/
     api/dev/bypass-signin/route.ts  # dev-only instant sign-in (see above)
   components/
     sign-in-dialog.tsx          # modal wrapper
-    social-sign-in-buttons.tsx  # Google + Facebook sign-in
+    social-sign-in-buttons.tsx  # Google sign-in
     email-sign-in-form.tsx      # magic-link email sign-in + dev bypass
     site-header.tsx             # sign in / user menu / sign out
     credits-panel.tsx           # balance + buy/subscribe buttons
-    oauth-error-banner.tsx      # surfaces ?error= from a failed OAuth callback
   lib/
     auth.ts / auth-client.ts    # Better Auth server + React client
     email.ts                    # Resend sender for magic-link emails

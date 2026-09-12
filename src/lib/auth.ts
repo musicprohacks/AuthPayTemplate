@@ -15,20 +15,11 @@ const google =
       }
     : undefined;
 
-const facebook =
-  process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET
-    ? {
-        clientId: process.env.FACEBOOK_CLIENT_ID,
-        clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      }
-    : undefined;
-
-export type SocialProvider = "google" | "facebook";
+export type SocialProvider = "google";
 export type EnabledProviders = Record<SocialProvider, boolean>;
 
 export const enabledProviders: EnabledProviders = {
   google: Boolean(google),
-  facebook: Boolean(facebook),
 };
 
 export const auth = betterAuth({
@@ -36,12 +27,11 @@ export const auth = betterAuth({
   database: db,
   socialProviders: {
     ...(google && { google }),
-    ...(facebook && { facebook }),
   },
   account: {
     accountLinking: {
       enabled: true,
-      trustedProviders: ["google", "facebook"],
+      trustedProviders: ["google"],
     },
   },
   databaseHooks: {
